@@ -6,60 +6,55 @@ import pro.sky.Errors.Exception.AddExceptionInternalServerError;
 import pro.sky.Errors.Exception.FindException;
 import pro.sky.Errors.Exception.RemoveException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    Employee[] employee = {
+    List<Employee> employee = new ArrayList<>(Arrays.asList(
             new Employee("Lex", "Lutor"),
             new Employee("Lois", "Laine"),
             new Employee(null, null),
             new Employee("Clark", "Kent"),
             new Employee("Oliver", "Queen"),
             new Employee("Viktor", "Stone"),
-            new Employee(null, null),
-
-    };
+            new Employee(null, null)
+            ));
 
     public Employee getEmployee(int number) {
-        if (number >= employee.length) {
+        if (number >= employee.size()) {
             throw new FindException();
         }
-        Employee employees = employee[number];
-        final String EmployeeDescription = ""
-                + employees.getName() + " "
-                + employees.getLastName();
-        //return EmployeeDescription;
-        return employee[number];
+        return employee.get(number);
     }
 
 
     public int search(String name, String lastname) {
-        for (int i = 0; i < employee.length; i++) {
-            if ((employee[i] != null) && (employee[i].getName() != null)) {//if1
-                if ((employee[i].getName().equals(name)) && (employee[i].getLastName().equals(lastname))) {
-                    return i;
-                }
+        for (int i = 0; i < employee.size(); i++) {
+            if ((employee.get(i) != null) && (employee.get(i).getName() != null)) {//if1
+                Employee employe = new Employee(name,lastname);
+                if(employe.equals(employee.get(i))) return i;
             }//if1
         }//for
-        return employee.length;
+        return employee.size();
     }
 
     public Employee add(String name, String lastName) {
         int person = search(name, lastName);
-        if (person < employee.length) throw new AddExceptionBadReques();
-        for (int i = 0; i < employee.length; i++) {
-            if ((employee[i] == null) || (employee[i].getName() == null)) {
-                employee[i] = new Employee(name, lastName);
-                return employee[i];
-            }
-        }
-        throw new AddExceptionInternalServerError();
+        if (person < employee.size()) throw new AddExceptionBadReques();
+
+                Employee employe = new Employee(name, lastName);
+                employee.add(employe);
+                return employe;
+
     }
 
     public Employee remove(String name, String lastName) {
         int person = search(name, lastName);
-        if (person < employee.length) {
-            Employee tmp = employee[person];
-            employee[person] = null;
+        if (person < employee.size()) {
+            Employee tmp = employee.get(person);
+            employee.remove(person);
             return tmp;
         }
         throw new RemoveException();
@@ -69,10 +64,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public Employee find(String name, String lastName) {
         int person = search(name, lastName);
-        if (person < employee.length) {
-            return employee[person];
+        if (person < employee.size()) {
+            return employee.get(person);
         }
         throw new FindException();
 
+    }
+
+    @Override
+    public List<Employee> listEmployee() {
+        return employee;
     }
 }

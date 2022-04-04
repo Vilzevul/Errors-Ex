@@ -12,6 +12,14 @@ public class Employee {
         this.lastName = lastName;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -24,16 +32,6 @@ public class Employee {
     public int hashCode() {
         return Objects.hash(name, lastName);
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-
 }
 
 

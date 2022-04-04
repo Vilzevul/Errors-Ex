@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pro.sky.Errors.Exception.ParamsException;
 
+import java.util.List;
+
 @RequestMapping("/employee")
 @RestController
 public class EmployeeController {
@@ -46,4 +48,10 @@ public class EmployeeController {
         }
         return employeeService.remove(name, lastName);
     }
+
+    @GetMapping(path = "/list")
+    public List<Employee> listEmployee() {
+           return employeeService.listEmployee();
+    }
+
 }
