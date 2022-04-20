@@ -1,17 +1,16 @@
 package pro.sky.Errors;
 
-
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pro.sky.Errors.Exception.ParamsException;
+import pro.sky.Errors.Exception.BadParamsException;
 
 import java.util.HashMap;
 
-@RequestMapping("/employee")
+@RequestMapping(path = "/employee")
 @RestController
 public class EmployeeController {
 
@@ -23,44 +22,33 @@ public class EmployeeController {
 
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
-        employeeService.init();
+        employeeService.initMap();
     }
 
-
     @GetMapping(path = "/find")
-    Employee search(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "lastname", required = false) String lastName)  {
+    Employee find(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "lastname", required = false) String lastName) {
         if ((name == null) || (lastName == null)) {
-            throw new ParamsException();
+            throw new BadParamsException();
         }
         return employeeService.find(name, lastName);
     }
 
-    @GetMapping(path = "/person")
-    Employee person(@RequestParam("number") int number) {
-
-        return employeeService.getEmployee(number);
-    }
-
-    @GetMapping(path = "/add")
-    public Employee add(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "lastname", required = false) String lastName) {
-        if ((name == null) || (lastName == null)) {
-            throw new ParamsException();
-        }
-        return employeeService.add(name, lastName);
-    }
-
     @GetMapping(path = "/remove")
-    public Employee delete(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "lastname", required = false) String lastName) {
+    public Employee remove(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "lastname", required = false) String lastName) {
         if ((name == null) || (lastName == null)) {
-            throw new ParamsException();
+            throw new BadParamsException();
         }
         return employeeService.remove(name, lastName);
     }
-
-    @GetMapping(path = "/list")
-    public HashMap<String, Employee> listEmployee() {
-
-           return employeeService.maplistEmployee();
+    @GetMapping (path = "/add")
+    public Employee add(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "lastname", required = false) String lastName) {
+        if ((name == null) || (lastName == null)) {
+            throw new BadParamsException();
+        }
+        return employeeService.add(name, lastName);
     }
-
+    @GetMapping(path = "/list")
+    public HashMap<String,Employee> mapListEmployee() {
+        return employeeService.mapListEmployee();
+    }
 }
